@@ -202,25 +202,25 @@ namespace ConsoleApplication
                                 dataFromClient = Encoding.UTF8.GetString(bytesFrom, 0, numBytesRead);
                             }
 
-                                int idx = dataFromClient.IndexOf('$');
+                            int idx = dataFromClient.IndexOf('$');
 
-                                if (clientID == null && idx > 0) //닉네임 전송
-                                {
-                                    clientID = dataFromClient.Substring(0, idx);
-                                    Program.UserAdd(clientID);
-                                }
+                            if (clientID == null && idx > 0) //닉네임 전송
+                            {
+                                clientID = dataFromClient.Substring(0, idx);
+                                Program.UserAdd(clientID);
+                            }
                             int pos = idx + 1;
-                                if (pos < dataFromClient.Length)// 채팅 내용
-                                {
-                                    dataFromClient = dataFromClient.Substring(pos, dataFromClient.Length - pos);
-                                    Console.WriteLine("From Client - " + clientID + ": " + dataFromClient);
-
-                                    Program.broadcast(dataFromClient, clientID, true);
-                                }
-                                else
-                                {
-                                    dataFromClient = "";
-                                }
+                            if (pos < dataFromClient.Length)// 채팅 내용
+                            {
+                                dataFromClient = dataFromClient.Substring(pos, dataFromClient.Length - pos);
+                                Console.WriteLine("From Client - " + clientID + ": " + dataFromClient);
+                                ProcessCommand(clientID, dataFromClient);
+                                Program.broadcast(dataFromClient, clientID, true);
+                            }
+                            else
+                            {
+                                dataFromClient = "";
+                            }
 
                         }
                     }
@@ -237,7 +237,7 @@ namespace ConsoleApplication
         private string DeleteTerminator(string remain)
         {
             int idx = remain.IndexOf(CHAR_TERMINATOR);
-            if(idx > 0)
+            if (idx > 0)
             {
                 remain = remain.Substring(0, idx);
             }
@@ -251,7 +251,7 @@ namespace ConsoleApplication
             {
                 posX = float.Parse(strs[0]);
                 posY = float.Parse(strs[1]);
-                Console.WriteLine("User move - " + clientID + "to" +  posX + "," + posY);
+                Console.WriteLine("User move - " + clientID + "to" + posX + "," + posY);
             }
             catch (Exception e)
             {
@@ -261,15 +261,15 @@ namespace ConsoleApplication
 
         private void ProcessCommand(string clientID, string dataFromClient)
         {
-            if(dataFromClient[0] == '#')
+            if (dataFromClient[0] == '#')
             {
                 string command;
                 string remain;
                 int idx = dataFromClient.IndexOf('#', 1);
-                if(idx > 1)
+                if (idx > 1)
                 {
                     command = dataFromClient.Substring(0, idx + 1);
-                    if(command == COMMAND_MOVE)
+                    if (command == COMMAND_MOVE)
                     {
                         remain = DeleteTerminator(dataFromClient.Substring(idx + 1));
                         ProcessMove(clientID, remain);

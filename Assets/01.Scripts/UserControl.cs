@@ -30,7 +30,7 @@ public class UserControl : MonoBehaviour
 
     private void Start()
     {
-        gm = GetComponent<GameManager>();
+        gm = GameObject.Find("GameManager").GetComponent<GameManager>();
         InvokeRepeating("DropHP", 1f, 1f);
     }
 

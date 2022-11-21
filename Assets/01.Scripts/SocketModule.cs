@@ -21,6 +21,11 @@ public class SocketModule : MonoBehaviour
         return instance;
     }
 
+    private void Start()
+    {
+        gm = GetComponent<GameManager>();
+    }
+
     private void Awake()
     {
         if (instance == null)
@@ -29,18 +34,14 @@ public class SocketModule : MonoBehaviour
         }
         else Destroy(gameObject);
     }
-    private void Start()
-    {
-        gm = GetComponent<GameManager>();
-    }
 
     public void Login(string id)
     {
-        if(isRunning)
+        if (!isRunning)
         {
             clientSocket = new TcpClient();
             IPAddress address = IPAddress.Parse("127.0.0.1");
-            clientSocket.Connect(address, 8888);
+            clientSocket.Connect(address, 1020);
             serverStream = clientSocket.GetStream();
 
             byte[] outStream = Encoding.UTF8.GetBytes(id + '$');
@@ -56,7 +57,7 @@ public class SocketModule : MonoBehaviour
 
     public void SendData(string str)
     {
-        if(isRunning && serverStream != null)
+        if (isRunning && serverStream != null)
         {
             byte[] outStream = Encoding.UTF8.GetBytes('$' + str);
             serverStream.Write(outStream, 0, outStream.Length);
@@ -71,33 +72,37 @@ public class SocketModule : MonoBehaviour
 
     public void LogOut()
     {
-        if(isRunning)
+        if (isRunning)
         {
             StopThread();
             nickName = "";
         }
-        if(serverStream != null)
+
+        if (serverStream != null)
         {
             serverStream.Close();
             serverStream = null;
         }
+
+        clientSocket.Close();
     }
 
     private void getMessage()
     {
         byte[] inStream = new byte[1024];
         string returnData = "";
+
         try
         {
-            while(isRunning)
+            while (isRunning)
             {
                 serverStream = clientSocket.GetStream();
                 int buffSize = clientSocket.ReceiveBufferSize;
                 int numBytesRead;
 
-                if(serverStream.DataAvailable)
+                if (serverStream.DataAvailable)
                 {
-                    while(serverStream.DataAvailable)
+                    while (serverStream.DataAvailable)
                     {
                         numBytesRead = serverStream.Read(inStream, 0, inStream.Length);
                         returnData += Encoding.UTF8.GetString(inStream, 0, numBytesRead);
@@ -107,6 +112,7 @@ public class SocketModule : MonoBehaviour
                 }
             }
         }
+
         catch (Exception ex)
         {
             StopThread();

@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
 
     public void SendCommand(string cmd)
     {
+        Debug.Log(SocketModule.GetInstance().name);
         SocketModule.GetInstance().SendData(cmd);
         Debug.Log("cmd send: " + cmd);
     }

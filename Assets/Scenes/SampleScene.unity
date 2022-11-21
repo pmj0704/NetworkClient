@@ -627,6 +627,7 @@ GameObject:
   m_Component:
   - component: {fileID: 654067177}
   - component: {fileID: 654067176}
+  - component: {fileID: 654067178}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -664,6 +665,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &654067178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 654067175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38bc778b46141a545ada5352ffdfb99a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &721411501
 GameObject:
   m_ObjectHideFlags: 0
@@ -2033,21 +2046,5 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: Chat
-      value: 
-      objectReference: {fileID: 1034756405}
-    - target: {fileID: 0}
-      propertyPath: User
-      value: 
-      objectReference: {fileID: 1365994172}
-    - target: {fileID: 0}
-      propertyPath: nickname
-      value: 
-      objectReference: {fileID: 1231040483}
-    - target: {fileID: 0}
-      propertyPath: prefabUser
-      value: 
-      objectReference: {fileID: 1365994172}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56b825cb16874f847a702e620b942609, type: 3}
