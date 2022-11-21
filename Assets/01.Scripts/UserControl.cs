@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class UserControl : MonoBehaviour
 {
+    private GameManager gm;
+
     [SerializeField]
     private float speed = 1f;
     [SerializeField]
@@ -12,13 +14,12 @@ public class UserControl : MonoBehaviour
     [SerializeField]
     private int DROP_HP = 2;
     private Transform orgPos;
-    private Vector3 targetPos;
+    public Vector3 targetPos;
     private int currentHP;
     [SerializeField]
     private float smooth = 2f;
 
-    [SerializeField]
-    private Slider slider;
+    public Slider slider;
 
     void Awake()
     {
@@ -29,6 +30,7 @@ public class UserControl : MonoBehaviour
 
     private void Start()
     {
+        gm = GetComponent<GameManager>();
         InvokeRepeating("DropHP", 1f, 1f);
     }
 
@@ -44,6 +46,14 @@ public class UserControl : MonoBehaviour
         transform.position = new Vector3(transform.position.x, transform.position.y, 0f);
 
         slider.value = ((float)currentHP /100);
+        string moveData = "#Move#" + targetPos.x + ',' + targetPos.y;
+        gm.SendCommand(moveData);
+
+        if(Input.GetMouseButtonDown(1))
+        {
+            string atkData = "#Attack#";
+            gm.SendCommand(atkData);
+        }
     }
 
     private void SetTargetPos()
@@ -54,12 +64,15 @@ public class UserControl : MonoBehaviour
 
     private void SetHP(int hp)
     {
+        hp = Mathf.Clamp(hp, 0, MAX_HP);
         currentHP = hp;
+        slider.value = ((float)currentHP / 100);
     }
 
-    private void DropHP()
+    public void DropHP(int drop)
     {
-        currentHP -= DROP_HP;
+        currentHP -= drop;
+        SetHP(drop);
     }
 
     public void Revive()

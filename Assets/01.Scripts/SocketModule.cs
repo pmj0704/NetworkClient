@@ -9,6 +9,7 @@ using System.Text;
 
 public class SocketModule : MonoBehaviour
 {
+    private GameManager gm;
     static SocketModule instance = null;
     private TcpClient clientSocket;
     private NetworkStream serverStream = default(NetworkStream);
@@ -27,6 +28,10 @@ public class SocketModule : MonoBehaviour
             instance = this;
         }
         else Destroy(gameObject);
+    }
+    private void Start()
+    {
+        gm = GetComponent<GameManager>();
     }
 
     public void Login(string id)
@@ -97,6 +102,7 @@ public class SocketModule : MonoBehaviour
                         numBytesRead = serverStream.Read(inStream, 0, inStream.Length);
                         returnData += Encoding.UTF8.GetString(inStream, 0, numBytesRead);
                     }
+                    gm.QueueCommand(returnData);
                     Debug.Log(returnData);
                 }
             }
