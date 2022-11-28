@@ -40,16 +40,15 @@ public class UserControl : MonoBehaviour
         {
             if(!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
             targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        }
 
+            slider.value = ((float)currentHP / 100);
+            string moveData = "#Move#" + targetPos.x + ',' + targetPos.y;
+            gm.SendCommand(moveData);
+        }
         transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * smooth);
         transform.position = new Vector3(transform.position.x, transform.position.y, 0f);
 
-        slider.value = ((float)currentHP /100);
-        string moveData = "#Move#" + targetPos.x + ',' + targetPos.y;
-        gm.SendCommand(moveData);
-
-        if(Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1))
         {
             string atkData = "#Attack#";
             gm.SendCommand(atkData);
