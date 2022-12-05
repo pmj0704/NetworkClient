@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private InputField Chat;
     string myID;
+    [SerializeField]
+    private float ATTACK_RADIUS = 3.5f;
 
     public GameObject prefabUser;
     public GameObject User;
@@ -92,29 +94,29 @@ public class GameManager : MonoBehaviour
                     }
                     Debug.Log($"command = {command} id = {id} remain = {remain} next ={nextCommand}");
 
+                    if(command == "Attack")
+                    {
+                        TakeDamage(remain);
+                    }
+
                     if (myID.CompareTo(id) != 0)
                     {
                         switch (command)
                         {
                             case "Enter":
+                                AddUser(id);
                                 ;
                                 break;
                             case "Left":
+                                UserLeft(id);
                                 ;
                                 break;
                             case "Move":
+                                SetMove(id, remain);
                                 ;
                                 break;
                             case "Heal":
-                                ;
-                                break;
-                            case "History":
-                                ;
-                                break;
-                            case "Attack":
-                                ;
-                                break;
-                            case "Damage":
+                                UserHeal(id);
                                 ;
                                 break;
                         }
@@ -141,6 +143,27 @@ public class GameManager : MonoBehaviour
 
             }
         }
+    }
+
+    public void Attack()
+    {
+        Collider2D[] damageUsers = Physics2D.OverlapCircleAll(User.transform.position, ATTACK_RADIUS);
+        System.Text.StringBuilder damageString = new System.Text.StringBuilder();
+
+        for (int i = 0; i < damageUsers.Length; i++)
+        {
+            UserControl userControl = damageUsers[i].GetComponent<UserControl>();
+            foreach (var item in remoteUsers)
+            {
+                if(item.Value == userControl)
+                {
+                    damageString.Append(item.Key);
+                    damageString.Append(',');
+                }    
+            }
+        }
+
+        SendCommand($"#Attack#{damageString.ToString()}");
     }
 
     public void OnLogin()
@@ -178,10 +201,13 @@ public class GameManager : MonoBehaviour
     public void AddUser(string id)
     {
         UserControl uc = null;
+        Debug.Log("ADDed");
         if (!remoteUsers.ContainsKey(id))
         {
+            Debug.Log("ADD");
             GameObject newUser = Instantiate(prefabUser);
             uc = newUser.GetComponent<UserControl>();
+            uc.isRemote = true;
             remoteUsers.Add(id, uc);
         }
     }

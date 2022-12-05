@@ -19,6 +19,8 @@ public class UserControl : MonoBehaviour
     [SerializeField]
     private float smooth = 2f;
 
+    public bool isRemote = false;
+
     public Slider slider;
 
     void Awake()
@@ -36,7 +38,7 @@ public class UserControl : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (!isRemote && Input.GetMouseButtonDown(0))
         {
             if(!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
             targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -48,10 +50,9 @@ public class UserControl : MonoBehaviour
         transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * smooth);
         transform.position = new Vector3(transform.position.x, transform.position.y, 0f);
 
-        if (Input.GetMouseButtonDown(1))
+        if (!isRemote && Input.GetMouseButtonDown(1))
         {
-            string atkData = "#Attack#";
-            gm.SendCommand(atkData);
+            gm.Attack();
         }
     }
 

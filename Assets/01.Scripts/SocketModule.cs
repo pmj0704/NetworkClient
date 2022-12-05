@@ -41,7 +41,7 @@ public class SocketModule : MonoBehaviour
         {
             clientSocket = new TcpClient();
             IPAddress address = IPAddress.Parse("127.0.0.1");
-            clientSocket.Connect(address, 1020);
+            clientSocket.Connect(address, 8888);
             serverStream = clientSocket.GetStream();
 
             byte[] outStream = Encoding.UTF8.GetBytes(id + '$');
